@@ -1,0 +1,212 @@
+/*@media only screen and (max-width: 1600px) {*/
+
+root { 
+    display: block;
+}
+.entete {
+    height: 45px;    
+    font-family:"Tangerine", serif;
+    color: #FFFFFF;
+    background-color: #115669;
+    box-shadow:  0 2px 5px 1px #bfbfbf;
+}
+
+.titre{
+    font-family:"Tangerine", serif;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding-top: 6px;
+    text-align: center;
+}
+
+.sousTitre{
+    font-family:"Tangerine", serif;
+    color: #FFFFFF; 
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 35px;    
+    letter-spacing: 1px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.logo{
+
+    height: 110px;
+    width: 115px;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-image: url(../images/logo.png);
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.imageCons{
+    opacity: 0.8;
+    margin-top: 9%;
+
+    height: 310px;
+    width: 450px;
+    background-image: url(../images/carte.png);
+    background-repeat: no-repeat;
+}
+
+.text{
+    text-indent: 30px;
+}
+p.text {
+    font-size: 14px;
+    font-family:"Times New Roman", Times, serif;
+    line-height: 1.6;
+}
+
+
+
+.carreOrange{
+    background-color: #d81617;
+    color: #ffffff;
+    overflow: hidden;
+    z-index: 1;
+    height: 250px;
+    width: 100%;
+    padding: 5px 10px 10px 10px;
+
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.carreVert{
+    background-color: #115669;
+    color: #ffffff;
+    overflow: hidden;
+    z-index: 1;
+    height: 250px;
+    width: 100%;
+    padding: 5px 10px 10px 10px;
+
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.carreBleu{
+    background-color: white;
+    color: black;
+    overflow: hidden;
+    z-index: 1;
+    height: 250px;
+    width: 103%;
+    padding: 5px 10px 10px 10px;
+
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+.carrejaune{
+    background-color: #ecc068;
+    width: 100%; 
+    height: 45%;
+}
+
+.fleche{
+    margin-top: 2%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.import{
+    margin-top: -27px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.titree{
+    color: #d81617;
+    margin-top: -10px;
+    text-align: center;
+}
+
+.paneuDoc{
+    margin-top: 12px;
+    background-color: #ffffff;
+    color: black; 
+    overflow: hidden;
+    z-index: 1;
+
+    padding: 5px 10px 10px 10px;
+
+    font-size: 14px;
+    letter-spacing: 1px; 
+}
+
+.entetePaneu{
+    margin-top: 0px;
+    margin-left:90px;
+    height: 85px;
+    width: 175px;
+    background-image: url(../images/information.png);
+    background-repeat: no-repeat;
+}
+
+.footer{
+    margin-top:50px;
+    height: 25px;
+    width: 1000px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 11px;
+    color: #d9d9d9;
+    font-weight: bold;
+    /*border-top:  2px dotted #d9d9d9;*/
+    padding-top: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+    background-color: #115669;
+    letter-spacing:  1px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.lien{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 12px; 
+    color: white;
+    font-weight: bold;
+}
+
+.lien:hover{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px; 
+    color: black;
+    font-weight: bold;
+    text-decoration:none;
+}
+
+.liens{
+    padding-left: 10px;
+    padding-top: 15px;   
+}
+
+.lien2{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 12px; 
+    color: black;
+     font-weight: bold;
+    letter-spacing: 1px;
+    text-decoration:none;
+    line-height: 14px;
+}
+
+.lien2:hover{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px; 
+    color: red;
+     font-weight: bold;
+    letter-spacing: 1px;
+    text-decoration:none;
+    line-height: 12px;
+}
+

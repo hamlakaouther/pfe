@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"      
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://elit.dz/ui"
+      xmlns:f="jakarta.faces.core">
+
+    <h:head >
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link href="#{request.contextPath}/resources/css/theme-style.css" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/images-login/logo.png"/>
+        <meta http-equiv="Server" content="none"/>
+       <title>
+            <ui:insert name="Title">
+            </ui:insert> 
+        </title>
+        <script> LANGUAGE="JavaScript" history.forward()</script> 
+    </h:head>
+    
+    <h:body class="bg-teal"  style="background-image : url(#{request.contextPath}/resources/images/tiles_backround_2.png);" >
+        <ui:include src="header.xhtml"></ui:include>
+        <a:pagecontainer>           
+            
+                <ui:insert name="breadCrumb" />
+                <a:container fluid="true" style="margin-top: 10px;">
+                    <a:row>
+                        <a:column span="10" offset="1">
+                               <ui:insert name="MyContent"/>
+                        </a:column>
+                    </a:row>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                        <p:commandButton value="#{bundleCommun.btn_oui}" type="button" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="#{bundleCommun.btn_non}" type="button" styleClass="ui-confirmdialog-no"  />
+                    </p:confirmDialog>
+                </a:container>
+            
+        </a:pagecontainer>
+        <div class="clearfix">
+        </div>
+        
+        <div class="page-footer-fixed" >
+            <div class="page-footer" >
+                <div class="page-footer-inner">
+                    2024
+                </div>
+                <div class="scroll-to-top" style="display: block;">
+                    <i class="icon-arrow-up"></i>
+                </div>
+            </div>  
+        </div>
+        <ui:insert name="MyDialog"/>
+         <h:form id="formDialog">
+            <p:dialog id="themDlg" header="Modifier thème"   widgetVar="themeDialog"  height="90" width="300">
+                
+            </p:dialog>
+        </h:form>
+      
+    </h:body>
+</html>

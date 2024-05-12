@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE payara-web-app PUBLIC "-//Payara.fish//DTD Payara Server 4 Servlet 3.0//EN" "https://raw.githubusercontent.com/payara/Payara-Server-Documentation/master/schemas/payara-web-app_4.dtd">
+<payara-web-app error-url="">
+  <security-role-mapping>
+    <role-name>EXPIRE</role-name>
+    <group-name>EXPIRE</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>PAS_ENCORS_ACTIF</role-name>
+    <group-name>PAS_ENCORS_ACTIF</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>INACTIF</role-name>
+    <group-name>INACTIF</group-name>
+  </security-role-mapping>
+</payara-web-app>

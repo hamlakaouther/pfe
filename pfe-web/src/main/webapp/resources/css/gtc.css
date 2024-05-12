@@ -1,0 +1,32 @@
+/*.ui-datatable table tfoot tr td, .ui-datatable table thead tr th {
+    min-width: 100% !important;
+}*/
+/*
+.non_scroll_table{
+    min-width: 100% !important;
+
+}*/
+
+.ui-rowgroup-header > td .ui-column-title, .ui-datatable-summaryrow > td .ui-column-title{
+    display: none;
+}
+
+.group-text{
+    font-weight: bold; font-size: 1.0em; 
+}
+
+.ui-datatable .ui-datatable-summaryrow td{
+    background-color: #ebeff3;
+    font-weight: bold; 
+    font-size: 1.0em;
+    color: black;
+    width: auto;
+    
+}
+
+.red {
+    background-color: red !important;
+    background-image: none !important;
+    color: #000000 !important;
+}
+

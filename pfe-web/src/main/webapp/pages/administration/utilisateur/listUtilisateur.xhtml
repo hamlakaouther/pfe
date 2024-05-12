@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des utilisateurs
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des utilisateurs" />
+            <a:menuitem value="List des utilisateurs" href="listUtilisateur.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+        <h:form id="form">
+            <a:row >
+                <p:button value="#{bundleCommun.btn_nouveau}" icon="fa fa-plus " styleClass="GreenButton" title="#{bundleAdmin.titre_nouveau_utilisateur}" outcome="addUtilisateur" rendered="#{mySessionController.isUserInRole('ADMIN_002_001')}" />
+                <p:messages id="msgs" globalOnly="true" showDetail="true" closable="true"/>
+            </a:row>
+            <a:panel isPadding="false" > 
+                    <a:column span="2" >  
+                        <a:label value="#{bundleAdmin.lbl_login}" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="login" value="#{listUtilisateurController.login}" label="#{bundleAdmin.lbl_login}" /> 
+                        </a:column>
+                    </a:column>
+                    <a:column span="2" >
+                        <a:label value="#{bundleAdmin.lbl_nom}" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="nom" value="#{listUtilisateurController.nom}" label="#{bundleAdmin.lbl_nom}" />                                    
+                        </a:column>
+                    </a:column>
+                    <a:label value="#{bundleAdmin.lbl_prenom}" span="1" />
+                    <a:column span="2" >
+                        <p:inputText id="description" value="#{listUtilisateurController.prenom}" label="#{bundleAdmin.lbl_prenom}" />                                    
+                    </a:column>
+                    <a:column span="4" >
+                        <a:label value="Unité" span="2"/>  
+                        <a:column span="10">
+                            <a:column span="2">
+                                <p:commandButton styleClass="GreenButton" icon="fa fa-external-link" immediate="true" onclick="PF('dialogUniteOrganisationelle').show();" />
+                            </a:column>
+                            <a:column span="10">
+                                <p:inputText id="codeUnite" value="#{listUtilisateurController.uniteOrganisationnelleSelected.code}" label="Code"/>
+                            </a:column>
+                        </a:column>
+                    </a:column>
+                    <a:column span="1" >
+                        <p:commandButton value="#{bundleCommun.btn_chercher}" styleClass="CyanButton" icon="fa fa-search" action="#{listUtilisateurController.rechercher()}" ajax="false" />  
+                    </a:column>              
+            </a:panel>            
+            
+            <a:row>
+                <a:panel header=" #{bundleAdmin.lien_liste_utilisateur}"  iconheader="fa fa-list-ul">
+                    <p:dataTable value="#{listUtilisateurController.listUtilisateurs}" var="utilisateur" emptyMessage="#{bundleCommun.msg_list_vide}" reflow="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" rows="8" >
+                        <p:column headerText="#{bundleAdmin.lbl_login}">
+                            <h:outputText value="#{utilisateur.login}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_nom}">
+                            <h:outputText value="#{utilisateur.nom}"/>                           
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_prenom}">
+                            <h:outputText value="#{utilisateur.prenom}"/>                           
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_code}">
+                            <h:outputText value="#{utilisateur.codeAgent}"/>                           
+                        </p:column>
+                        <!--<p:column headerText="#{bundleAdmin.lbl_date_activation}">
+                            <h:outputText value="#{utilisateur.dateActivation}" >
+                                <f:converter converterId="dateConverter" />
+                            </h:outputText>                           
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_date_expiration}" width="50">
+                            <h:outputText value="#{utilisateur.dateExpiration}">
+                                <f:converter converterId="dateConverter" />
+                            </h:outputText>                           
+                        </p:column>-->
+                        <p:column headerText="#{bundleAdmin.lbl_unite_organisationnelle}">
+                            <h:outputText  value="#{utilisateur.adminUniteOrganisationnelle.denominationFr}"/>                           
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_active}" width="30">
+                            <h:selectBooleanCheckbox  value="#{utilisateur.active}" disabled="true"/>                           
+                        </p:column>
+                        <p:column headerText="#{bundleAdmin.lbl_actions}" width="150">
+                            <p:commandButton   icon="fa fa-info" title="#{bundleAdmin.lbl_visualisation_detail}" action="showUtilisateur" ajax="false" rendered="#{mySessionController.isUserInRole('ADMIN_002_005')}">  
+                                <f:param name="id" value="#{utilisateur.id}" />
+                            </p:commandButton>  
+                            <p:commandButton icon="fa fa-pencil-square-o" title="#{bundleAdmin.lbl_modification}" action="editUtilisateur" ajax="false" rendered="#{mySessionController.isUserInRole('ADMIN_002_002')}">
+                                <f:param name="id" value="#{utilisateur.id}"></f:param>
+                            </p:commandButton>  
+                            <p:commandButton icon="fa fa-times" actionListener="#{listUtilisateurController.remove(utilisateur)}" title="#{bundleAdmin.lbl_suppression}" update=":form" rendered="#{mySessionController.isUserInRole('ADMIN_002_003')}">
+                                <p:confirm header="#{bundleAdmin.lbl_confirmation}" message="#{bundleCommun.msg_confirm_vs_suppr_enregistrement}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton icon="fa fa-refresh" actionListener="#{listUtilisateurController.initialisePwdUtilisateur(utilisateur)}" title="#{bundleAdmin.lbl_reinitialiser}" update=":form" rendered="#{mySessionController.isUserInRole('ADMIN_002_007')}">
+                                <p:confirm header="#{bundleAdmin.lbl_confirmation}" message="#{bundleAdmin.lbl_reinitialiser}" icon="ui-icon-alert" />
+                            </p:commandButton> 
+                        </p:column>
+                    </p:dataTable> 
+                </a:panel>
+            </a:row>
+            <!--a:row>
+                <p:commandButton   icon="fa fa-download" onclick="this.form.target = '_blank';" ajax="false" actionListener="{listUtilisateurController.telecharger()}" value="{bundleCommun.lbl_telecharger}"/>
+                <p:commandButton icon="fa fa-file-archive-o" actionListener="{listUtilisateurController.download}" value="{bundleCommun.lbl_exporter}"/>
+            </a:row-->
+        </h:form>        
+    </ui:define>
+    
+    <ui:define name="MyDialog">
+        <h:form id="formDialogs">
+        <p:dialog id="dialogUniteOrganisationelleId" header="#{bundleAdmin.lien_liste_unite_org}" widgetVar="dialogUniteOrganisationelle" width="790" position="center" modal="true" >
+            <h:panelGroup id="panelUniteParents">
+                <p:dataTable value="#{listUtilisateurController.listUniteOrganisationnelle}" var="unite" 
+                             selectionMode="single" selection="#{listUtilisateurController.uniteOrganisationnelleSelected}" rowKey="#{unite.id}"                                
+                             emptyMessage="#{bundleCommun.msg_list_vide}" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="false" rows="8">
+                    <p:ajax event="rowSelect" update=":form" oncomplete="PF('dialogUniteOrganisationelle').hide();" />
+                    <p:column headerText="#{bundleAdmin.lbl_code}" filterBy="#{unite.affichage}" filterMatchMode="contains">
+                        <h:outputText value="#{unite.affichage}"/>
+                    </p:column> 
+                    <p:column headerText="#{bundleAdmin.lbl_denomination_fr}" filterBy="#{unite.denominationFr}" filterMatchMode="contains">
+                        <h:outputText value="#{unite.denominationFr}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleAdmin.lbl_denomination_ar}">
+                        <h:outputText value="#{unite.denominationAr}"/>
+                    </p:column>
+                    <p:column headerText="Code unite " filterBy="#{unite.codeUniteSgc}" filterMatchMode="startsWith">
+                        <h:outputText value="#{unite.codeUniteSgc}"/>
+                    </p:column> 
+                </p:dataTable>
+            </h:panelGroup>
+        </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
