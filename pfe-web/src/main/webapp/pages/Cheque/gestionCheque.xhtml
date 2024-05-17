@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des Cheques
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Cheques" />
+            <a:menuitem value="List des Cheques" href="gestionCheque.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+    <div class="card crud-demo">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="New" icon="pi pi-plus" actionListener="#{listChequeController.addCheque}"
+                                     update=":dialogs:manage-cheque-content" oncomplete="PF('manageChequeDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:manage-cheque-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-products-button" value="#{listChequeController.deleteButtonMessage}"
+                                     icon="pi pi-trash" actionListener="#{listChequeController.deleteSelectedProducts}"
+                                     styleClass="ui-button-danger" disabled="#{!listChequeController.hasSelectedCheques()}" update="@this">
+                        <p:confirm header="Confirmation" message="Delete the selected products?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="pi pi-download" />
+                    <p:commandButton value="Exporter" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                        <p:dataExporter type="pdf" target="dt-products" fileName="cheques" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="dt-cheques" widgetVar="dtcheques" var="cheque" value="#{listChequeController.selectedCheque}"
+                         reflow="true" styleClass="products-table" selection="#{listChequeController.selectedCheques}"
+                         rowKey="#{cheque.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">LISTE DES CHÈQUES</span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter" onkeyup="PF('dtcheques').filter()" placeholder="Search" />
+                        </span>
+                    </div>
+                </f:facet>
+
+                <p:ajax event="rowSelect" update=":form:delete-cheques-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-cheques-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-cheques-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-cheques-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-cheques-button" />
+
+                <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                <p:column headerText="Nom Chèque" sortBy="#{cheque.nomCheque}" filterBy="#{cheque.nomCheque}">
+                    <h:outputText value="#{cheque.nomCheque}" />
+                </p:column>
+                <p:column headerText="№ Chèque" sortBy="#{cheque.numCheque}" filterBy="#{cheque.numCheque}">
+                    <h:outputText value="#{cheque.numCheque}" />
+                </p:column>
+                <p:column headerText="Rip" sortBy="#{cheque.banqueCheque.code}" filterBy="#{cheque.banqueCheque.code}">
+                    <h:outputText value="#{cheque.banqueCheque.code}" />
+                </p:column>
+
+                <!--<p:column headerText="Image" exportable="false">
+                    <p:graphicImage name="images/product/#{product.image}" library="demo" styleClass="product-image" />
+                </p:column>-->
+
+                <p:column headerText="Montant" sortBy="#{cheque.montant}">
+                    <h:outputText value="#{cheque.montant}" style="font-weight: 700">
+                        <f:convertNumber currencySymbol="DZD" type="currency" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date de Creation" sortBy="#{cheque.dateCreation}" filterBy="#{cheque.dateCreation}">
+                    <h:outputText value="#{cheque.dateCreation}" />
+                </p:column>
+
+                <p:column headerText="État" sortBy="#{cheque.inventoryStatus}"
+                          filterBy="#{cheque.inventoryStatus}">
+                    <h:outputText styleClass="product-badge status-#{cheque.inventoryStatus.name().toLowerCase()}"
+                                  value="#{cheque.inventoryStatus.text}" />
+                </p:column>
+
+                <p:column headerText="Banque" sortBy="#{cheque.rip}" filterBy="#{cheque.rip}">
+                    <h:outputText value="#{cheque.rip}" />
+                </p:column>
+                <p:column headerText="Date d'Envoi a la Banque" sortBy="#{cheque.dateEnvoiBanque}" filterBy="#{cheque.dateEnvoiBanque}">
+                    <p:rating value="#{cheque.dateEnvoiBanque}" readonly="true" />
+                </p:column>
+                <p:column headerText="date d'Envoi à la DD" sortBy="#{cheque.dateEnvoiDd}" filterBy="#{cheque.dateEnvoiDd}">
+                    <p:rating value="#{cheque.dateEnvoiDd}" readonly="true" />
+                </p:column>
+                <p:column headerText="Date de l'Encaissement" sortBy="#{cheque.dateEncaissement}" filterBy="#{cheque.dateEncaissement}">
+                    <p:rating value="#{cheque.dateEncaissement}" readonly="true" />
+                </p:column>
+                <p:column headerText="Code Client" sortBy="#{cheque.codeClient}" filterBy="#{cheque.codeClient}">
+                    <p:rating value="#{cheque.codeClient}" readonly="true" />
+                </p:column>
+                <p:column headerText="Num Facture" sortBy="#{cheque.numFacture}" filterBy="#{cheque.numFacture}">
+                    <p:rating value="#{cheque.numFacture}" readonly="true" />
+                </p:column>
+                <p:column headerText="Montant Facture" sortBy="#{cheque.montantFacture}">
+                    <h:outputText value="#{cheque.montantFacture}" style="font-weight: 700">
+                        <f:convertNumber currencySymbol="DZD" type="currency" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column exportable="false">
+                    <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-cheque-content"
+                                     oncomplete="PF('manageChequeDialog').show()"
+                                     styleClass="edit-button rounded-button ui-button-success" process="@this">
+                        <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                        <p:resetInput target=":dialogs:manage-cheque-content" />
+                    </p:commandButton>
+                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('deleteChequeDialog').show()">
+                        <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="dialogs">
+            <p:dialog header="Détails du Chèque" showEffect="fade" modal="true" widgetVar="manageChequeDialog"
+                      responsive="true">
+                <p:outputPanel id="manage-cheque-content" class="ui-fluid">
+                    <p:outputPanel rendered="#{not empty listChequeController.selectedCheque}">
+                        <div class="field">
+                            <p:outputLabel for="nomCheque">Nom Chèque</p:outputLabel>
+                            <p:inputText id="nomCheque" value="#{listChequeController.selectedCheque.nomCheque}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="numCheque">Num Chèque</p:outputLabel>
+                            <p:inputTextarea id="numCheque" value="#{listChequeController.selectedCheque.numCheque}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="rip">Rip</p:outputLabel>
+                            <p:inputTextarea id="rip" value="#{listChequeController.selectedCheque.rip}" required="true" />
+                        </div>
+                        <div class="field">
+                            <p:outputLabel for="etat">État</p:outputLabel>
+                            <p:selectOneRadio id="etat" value="#{listChequeController.selectedCheque.etat}"
+                                              layout="responsive" columns="2" required="true" >
+                                <f:selectItem itemLabel="Payé" itemValue="Payé" />
+                                <f:selectItem itemLabel="Clothing" itemValue="Clothing" />
+                                <f:selectItem itemLabel="Electronics" itemValue="Electronics" />
+                                <f:selectItem itemLabel="Fitness" itemValue="Fitness" />
+                            </p:selectOneRadio>
+                        </div>
+                        <div class="field col">
+                            <p:outputLabel for="montant">Montant</p:outputLabel>
+                            <p:inputNumber id="montant" value="#{listChequeController.selectedCheque.montant}" symbol=" DZD"
+                                           symbolPosition="s" decimalSeparator="." thousandSeparator="," required="true"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{crudView.saveProduct}"
+                                     update="manage-cheque-content" process="manage-cheque-content @this" />
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade" width="300"
+                             message="Delete the product?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{crudView.deleteProduct}"
+                                 process="@this" update=":form:delete-products-button"
+                                 oncomplete="PF('deleteProductDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteProductDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+    </ui:define>
+</ui:composition>

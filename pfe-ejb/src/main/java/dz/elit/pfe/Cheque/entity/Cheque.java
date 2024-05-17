@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cheque.findByRip", query = "SELECT c FROM Cheque c WHERE c.rip = :rip"),
+    @NamedQuery(name = "Cheque.findAll", query = "SELECT c FROM Cheque c"),
     @NamedQuery(name = "Cheque.findById", query = "SELECT c FROM Cheque c WHERE c.id = :id")
 })
 public class Cheque extends Audit implements Serializable {

@@ -36,6 +36,7 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Caisse.findByCode", query = "SELECT c FROM Caisse c WHERE c.code = :code"),
+    @NamedQuery(name = "Caisse.findAll", query = "SELECT c FROM Caisse c"),
     @NamedQuery(name = "Caisse.findById", query = "SELECT c FROM Caisse c WHERE c.id = :id")
 })
 public class Caisse extends Audit implements Serializable {

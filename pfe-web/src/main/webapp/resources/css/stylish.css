@@ -1,0 +1,84 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : May 16, 2024, 3:33:41 PM
+    Author     : xps
+*/
+
+/* CSS for the "New" button with styleClass="ui-button-success" */
+.ui-button-success {
+    background-color: #28a745; /* Green background */
+    border: none;
+    color: white; /* White text */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ui-button-success:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* CSS for the "Delete" button with id="delete-products-button" and styleClass="ui-button-danger" */
+#delete-products-button {
+    background-color: #dc3545; /* Red background */
+    border: none;
+    color: white; /* White text */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#delete-products-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* CSS for the "Import" button with styleClass="ui-button-help" */
+.ui-button-help {
+    background-color: #007bff; /* Blue background */
+    border: none;
+    color: white; /* White text */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ui-button-help:hover {
+    background-color: #0069d9; /* Darker blue on hover */
+}
+
+/* CSS for the "Export" button with styleClass="ui-button-help" */
+.ui-button-help {
+    background-color: #6f42c1; /* Purple background */
+    border: none;
+    color: white; /* White text */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ui-button-help:hover {
+    background-color: #5a32a3; /* Darker purple on hover */
+}

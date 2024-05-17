@@ -21,7 +21,31 @@
 
 
     <ui:define name="MyContent">
-        <h:form id="form"></h:form>
+        <h:form id="form">
+            <a:row >
+                <p:button value="#{bundleCommun.btn_nouveau}" icon="fa fa-plus " styleClass="GreenButton" title="#{bundleAdmin.titre_nouveau_unite_org}" outcome="addUtilisateur" rendered="#{mySessionController.isUserInRole('ADMIN_002_001')}" />
+                <p:messages id="msgs" globalOnly="true" showDetail="true" closable="true"/>
+            </a:row>
+            
+             <p:dataTable var="unite" value="#{listUniteOrgController.listUniteOrgs}">
+            <p:column headerText="Code">
+                <h:outputText value="#{unite.code}" />
+            </p:column>
+
+            <p:column headerText="denomination AR">
+                <h:outputText value="#{unite.denominationAr}" />
+            </p:column>
+
+            <p:column headerText="denomination FR">
+                <h:outputText value="#{unite.denominationFr}" />
+            </p:column>
+
+            <p:column headerText="niveau">
+                <h:outputText value="#{unite.niveau}" />
+            </p:column>
+        </p:dataTable>
+            
+        </h:form>
       
         
     </ui:define>

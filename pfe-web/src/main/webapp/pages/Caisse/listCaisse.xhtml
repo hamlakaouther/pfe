@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des Caisses
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Caisses" />
+            <a:menuitem value="List des Caisses" href="listCaisse.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+        <h:form id="form"> 
+            <a:row >
+                <p:button value="Nouveau" icon="plus-icon" styleClass="GreenButton" title="Nouvelle Caisse" outcome="addCaisse" rendered="#{mySessionController.isUserInRole('ADMIN_002_001')}">
+                </p:button>
+                <p:messages id="msgs" globalOnly="true" showDetail="true" closable="true"/>
+            </a:row>
+            <a:row>
+                <a:panel header="Liste des Caisses"  iconheader="fa fa-list-ul">
+                    <p:dataTable value="#{listCaisseController.listCaisses}" var="caisse" emptyMessage="Liste Vide !" reflow="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" rows="8" >
+                        <p:column headerText="Code">
+                            <h:outputText value="#{caisse.code}"/>
+                        </p:column>
+                        <p:column headerText="État">
+                            <h:outputText  value="#{caisse.etat}"/>                           
+                        </p:column>
+                        <p:column headerText="Date d'Ouverture">
+                            <h:outputText value="#{caisse.dateOuverture}" >
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="date d'Arret">
+                            <h:outputText value="#{caisse.dateArret}" >
+                            </h:outputText>                           
+                        </p:column>
+                        <p:column headerText="Unite Organisationnelle">
+                            <h:outputText  value="#{caisse.uniteOrganisationnelleCaisse.denominationFr}"/>                           
+                        </p:column>
+                    </p:dataTable> 
+                </a:panel>
+            </a:row>
+        </h:form>        
+    </ui:define>
+</ui:composition>

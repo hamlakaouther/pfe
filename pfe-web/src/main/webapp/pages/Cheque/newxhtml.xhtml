@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des Cheques
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Cheques" />
+            <a:menuitem value="List des Cheques" href="newxhtml.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+<h:form id="form">
+        <p:growl id="messages" showDetail="true" />
+
+        <p:toolbar>
+            <p:toolbarGroup>
+                <p:commandButton value="New" icon="pi pi-plus" actionListener="#{listChequeController.addCheque}"
+                    update=":dialogs:manage-cheque-content" oncomplete="PF('manageChequeDialog').show()"
+                    styleClass="ui-button-success" style="margin-right: .5rem">
+                    <p:resetInput target=":dialogs:manage-cheque-content" />
+                </p:commandButton>
+                <p:commandButton id="delete-products-button" value="#{listChequeController.deleteButtonMessage}"
+                    icon="pi pi-trash" actionListener="#{listChequeController.deleteSelectedProducts}"
+                    styleClass="ui-button-danger" disabled="#{!listChequeController.hasSelectedCheques()}" update="@this">
+                    <p:confirm header="Confirmation" message="Delete the selected products?"
+                        icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+            </p:toolbarGroup>
+            <p:toolbarGroup align="right">
+                <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="pi pi-download" />
+                <p:commandButton value="Exporter" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                    <p:dataExporter type="pdf" target="dt-products" fileName="cheques" />
+                </p:commandButton>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <p:dataTable id="dt-products" widgetVar="dtcheques" var="cheque" value="#{listChequeController.cheque}"
+            reflow="true" styleClass="products-table" selection="#{listChequeController.selectedCheques}"
+            rowKey="#{cheque.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+            <f:facet name="header">
+                <div class="products-table-header">
+                    <span style="font-weight: bold">LISTE DES CHÈQUES</span>
+                    <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtcheques').filter()" placeholder="Search" />
+                    </span>
+                </div>
+            </f:facet>
+
+            <p:ajax event="rowSelect" update=":form:delete-cheques-button" />
+            <p:ajax event="rowUnselect" update=":form:delete-cheques-button" />
+            <p:ajax event="rowSelectCheckbox" update=":form:delete-cheques-button" />
+            <p:ajax event="rowUnselectCheckbox" update=":form:delete-cheques-button" />
+            <p:ajax event="toggleSelect" update=":form:delete-cheques-button" />
+
+            <p:column selectionMode="multiple" exportable="false"></p:column>
+
+            <p:column headerText="Nom Chèque" sortBy="#{cheque.nomCheque}" filterBy="#{cheque.nomCheque}">
+                <h:outputText value="#{cheque.nomCheque}" />
+            </p:column>
+            <p:column headerText="№ Chèque" sortBy="#{cheque.numCheque}" filterBy="#{cheque.numCheque}">
+                <h:outputText value="#{cheque.numCheque}" />
+            </p:column>
+            <p:column headerText="Rip" sortBy="#{cheque.banqueCheque.code}" filterBy="#{cheque.banqueCheque.code}">
+                <h:outputText value="#{cheque.banqueCheque.code}" />
+            </p:column>
+            
+            <!--<p:column headerText="Image" exportable="false">
+                <p:graphicImage name="images/product/#{product.image}" library="demo" styleClass="product-image" />
+            </p:column>-->
+            
+            <p:column headerText="Montant" sortBy="#{cheque.montant}">
+                <h:outputText value="#{cheque.montant}" style="font-weight: 700">
+                    <f:convertNumber currencySymbol="DZD" type="currency" />
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Date de Creation" sortBy="#{cheque.dateCreation}" filterBy="#{cheque.dateCreation}">
+                <h:outputText value="#{cheque.dateCreation}" />
+            </p:column>
+            <p:column headerText="État" sortBy="#{cheque.etat}" filterBy="#{cheque.etat}">
+                <h:outputText value="#{cheque.etat}" />
+            </p:column>
+            <p:column headerText="Banque" sortBy="#{cheque.rip}" filterBy="#{cheque.rip}">
+                <h:outputText value="#{cheque.rip}" />
+            </p:column>
+            <p:column headerText="Date d'Envoi a la Banque" sortBy="#{cheque.dateEnvoiBanque}" filterBy="#{cheque.dateEnvoiBanque}">
+                <p:rating value="#{cheque.dateEnvoiBanque}" readonly="true" />
+            </p:column>
+            <p:column headerText="date d'Envoi à la DD" sortBy="#{cheque.dateEnvoiDd}" filterBy="#{cheque.dateEnvoiDd}">
+                <p:rating value="#{cheque.dateEnvoiDd}" readonly="true" />
+            </p:column>
+            <p:column headerText="Date de l'Encaissement" sortBy="#{cheque.dateEncaissement}" filterBy="#{cheque.dateEncaissement}">
+                <p:rating value="#{cheque.dateEncaissement}" readonly="true" />
+            </p:column>
+            <p:column headerText="Code Client" sortBy="#{cheque.codeClient}" filterBy="#{cheque.codeClient}">
+                <p:rating value="#{cheque.codeClient}" readonly="true" />
+            </p:column>
+            <p:column headerText="Num Facture" sortBy="#{cheque.numFacture}" filterBy="#{cheque.numFacture}">
+                <p:rating value="#{cheque.numFacture}" readonly="true" />
+            </p:column>
+            <p:column headerText="Montant Facture" sortBy="#{cheque.montantFacture}">
+                <h:outputText value="#{cheque.montantFacture}" style="font-weight: 700">
+                    <f:convertNumber currencySymbol="DZD" type="currency" />
+                </h:outputText>
+            </p:column>
+            
+            <p:column exportable="false">
+                <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-cheque-content"
+                    oncomplete="PF('manageChequeDialog').show()"
+                    styleClass="edit-button rounded-button ui-button-success" process="@this">
+                    <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                    <p:resetInput target=":dialogs:manage-cheque-content" />
+                </p:commandButton>
+                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                 process="@this"
+                                 oncomplete="PF('deleteChequeDialog').show()">
+                    <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                </p:commandButton>
+            </p:column>
+
+        </p:dataTable>
+    </h:form>
+</ui:composition>
