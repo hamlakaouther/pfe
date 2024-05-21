@@ -66,13 +66,13 @@ public class ChequeFacade extends AbstractFacade<Cheque> {
         return query.getResultList();
     }*/
     
-    private boolean isChequeExists(int id) {
-        return findChequeById(id) != null;
+    public boolean isChequeExists(String rip) {
+        return findChequeByRip(rip) != null;
     }
 
     public void createCheque(Cheque cheque) throws MyException {
-        if (isChequeExists(cheque.getId())) {
-            throw new MyException("Le Cheque " + cheque.getId() + " existe déjà ");
+        if (isChequeExists(cheque.getRip())) {
+            throw new MyException("Le Cheque " + cheque.getRip() + " existe déjà ");
         } else {
             super.create(cheque);
         }

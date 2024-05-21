@@ -297,4 +297,12 @@ public class AdminUniteOrganisationnelleFacade extends AbstractFacade<AdminUnite
                 .map(x -> x.getId())
                 .collect(Collectors.toList());
     }
+    
+    public boolean isUniteExists(String code) {
+        return findByCode(code) != null;
+    }
+    
+    public void editUnite(AdminUniteOrganisationnelle Unite) {
+        super.edit(Unite);
+    }
 }

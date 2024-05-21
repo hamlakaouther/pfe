@@ -1,13 +1,19 @@
-<?xml version='1.0' encoding='UTF-8' ?> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:a="http://elit.dz/ui">
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+    
+    <ui:define name="Title" >
+        Login
+    </ui:define >
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content="1234567891234567" name="csrf-token" />
-        <title> #{bundleCommun.lbl_login}  </title>
         <h:outputStylesheet library="css" name="login.css"/>
         <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/images-login/logo.png"/>
     </h:head>
@@ -32,28 +38,28 @@
                             <br/><br/>
                             <a:row styleClass="label">
                                 <a:column span="3" >
-                                    #{bundleCommun.lbl_login}
+                                   Login
                                 </a:column>
                             </a:row>
                             <a:row >
                                 <a:column span="9">
-                                    <input class="form-control margin_color_input" name="j_username" type="text" id ="j_username"  placeholder="#{bundleCommun.lbl_login}" />
+                                    <input class="form-control margin_color_input" name="j_username" type="text" id ="j_username"  placeholder="Username" />
                                 </a:column>
                             </a:row>
                             <a:row styleClass="label">
                                 <a:column span="3">
-                                    #{bundleCommun.lbl_password}
+                                    Password
                                 </a:column>
                             </a:row>
                             <a:row>
                                 <a:column span="9">
-                                    <input class="form-control margin_color_input" name="j_password" type="password" id ="j_password"  placeholder="#{bundleCommun.lbl_password}"/>
+                                    <input class="form-control margin_color_input" name="j_password" type="password" id ="j_password"  placeholder="Password"/>
                                 </a:column>
                             </a:row>
                             <a:row nomargin="true">
                                 <a:column span="12">
                                     <button type="submit"  class="btnn green-haze" id = "enter" name = "enter" value = "Sign in" >
-                                        #{bundleCommun.lbl_connecter} 
+                                        Connecter
                                         <i class="m-icon-swapright m-icon-white"></i>
                                     </button>                                   
                                 </a:column>
@@ -74,4 +80,4 @@
             </a:row>
         </a:container>
     </h:body>
-</html>
+</ui:composition>

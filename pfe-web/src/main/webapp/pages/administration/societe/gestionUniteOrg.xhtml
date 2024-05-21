@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des Cheques
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="liste des unités organisationnelles" />
+            <a:menuitem  href="gestionUniteOrg.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nouveau" icon="fa fa-plus" actionListener="#{gestionUniteOrgController.newUO}"
+                                     update=":dialogs:manage-unite-content" oncomplete="PF('manageUniteDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:manage-unite-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-unites-button" value="#{gestionUniteOrgController.deleteButtonMessage}"
+                                     icon="fa fa-trash" actionListener="#{gestionUniteOrgController.deleteSelectedUnites}"
+                                     styleClass="ui-button-danger" disabled="#{!gestionUniteOrgController.hasSelectedUnites()}" update="@this">
+                        <p:confirm header="Confirmation" message="Supprimer les unités sélectionnés ?"
+                                   icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="fa fa-download" />
+                    <p:commandButton value="Exporter" icon="fa fa-upload" styleClass="ui-button-help" ajax="false">
+                        <p:dataExporter type="pdf" target="dt-unites" fileName="unites" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:dataTable id="dt-unites" widgetVar="dtUnites" var="unite" value="#{gestionUniteOrgController.listUOS}"
+                         reflow="true" styleClass="products-table" selection="#{gestionUniteOrgController.selectedUOS}"
+                         rowKey="#{unite.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">UNITÉS ORGANISATIONNELLES</span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter" onkeyup="PF('dtUnites').filter()" placeholder="Search"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:ajax event="rowSelect" update=":form:delete-unites-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-unites-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-unites-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-unites-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-unites-button" />
+                <p:column selectionMode="multiple" exportable="false" width="3%"></p:column>
+
+                <!-- Les Colums -->
+                <p:column headerText="Denomination Ar" sortBy="#{unite.denominationAr}" filterBy="#{unite.denominationAr}" width="14%">
+                    <h:outputText value="#{unite.denominationAr}" />
+                </p:column>
+                <p:column headerText="Denomination Fr" sortBy="#{unite.denominationFr}" filterBy="#{unite.denominationFr}" width="14%">
+                    <h:outputText value="#{unite.denominationFr}" />
+                </p:column>
+                <p:column headerText="Type" sortBy="#{unite.typeUniteOrganisationnelle}" filterBy="#{unite.typeUniteOrganisationnelle}" width="14%">
+                    <h:outputText value="#{unite.typeUniteOrganisationnelle}" />
+                </p:column>
+                <p:column headerText="Niveau" sortBy="#{unite.niveau}" filterBy="#{unite.niveau}" width="14%">
+                    <h:outputText value="#{unite.niveau}" />
+                </p:column>
+                <p:column headerText="Parent" sortBy="#{unite.uniteParent.denominationFr}" filterBy="#{unite.uniteParent.denominationFr}" width="14%">
+                    <h:outputText value="#{unite.uniteParent.denominationFr}" />
+                </p:column>
+                <p:column headerText="Code" sortBy="#{unite.code}" filterBy="#{unite.code}" width="14%">
+                    <h:outputText value="#{unite.code}" />
+                </p:column>
+                <p:column headerText="Adresse" sortBy="#{unite.adresse}" filterBy="#{unite.adresse}" width="14%">
+                    <h:outputText value="#{unite.adresse}" />
+                </p:column>
+                <p:column headerText="Email" sortBy="#{unite.email}" filterBy="#{unite.email}" width="14%">
+                    <h:outputText value="#{unite.email}" />
+                </p:column>
+                <p:column headerText="Telephone" sortBy="#{unite.telephone}" filterBy="#{unite.telephone}" width="14%">
+                    <h:outputText value="#{unite.telephone}" />
+                </p:column>
+                <!--<p:column headerText="Capital Social" sortBy="#{unite.capitalSocial}" filterBy="#{unite.capitalSocial}" width="14%">
+                    <h:outputText value="#{unite.capitalSocial}" />
+                </p:column>--><p:column headerText="Capital Social" sortBy="#{unite.capitalSocial}">
+                    <h:outputText value="#{unite.capitalSocial}" style="font-weight: 700">
+                        <f:converter converterId="MonnaieConvertisseur" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column exportable="false" width="14%">
+                    <p:commandButton icon="fa fa-pencil-square-o" update=":dialogs:manage-unite-content"
+                                     oncomplete="PF('manageUniteDialog').show()"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{unite}" target="#{gestionUniteOrgController.selectedUO}" />
+                        <p:resetInput target=":dialogs:manage-unite-content" />
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-times"
+                                     process="@this"
+                                     oncomplete="PF('deleteUniteDialog').show()">
+                        <f:setPropertyActionListener value="#{unite}" target="#{gestionUniteOrgController.selectedUO}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="dialogs">
+            <p:dialog id="manage-unite-content" header="Détails du L'unités" showEffect="fade" modal="true" widgetVar="manageUniteDialog"
+                      responsive="true" width="70%">
+                <a:row>
+                    <a:column span="6">
+                        <a:label value="Denomination Ar" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="denominationAr" value="#{gestionUniteOrgController.selectedUO.denominationAr}" required="true"/>  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Denomination Fr" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="denominationFr" value="#{gestionUniteOrgController.selectedUO.denominationFr}" required="true"/>  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Type" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="typeUniteOrganisationnelle" value="#{gestionUniteOrgController.selectedUO.typeUniteOrganisationnelle}" required="true"/>  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Niveau" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="niveau" value="#{gestionUniteOrgController.selectedUO.niveau}" required="true"/>  
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Parent" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="uniteParent" value="#{gestionUniteOrgController.selectedUO.uniteParent.denominationFr}" />
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Code" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="code" value="#{gestionUniteOrgController.selectedUO.code}" required="true"/>  
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Adresse" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="adresse" value="#{gestionUniteOrgController.selectedUO.adresse}" required="true"/>  
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Email" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="email" value="#{gestionUniteOrgController.selectedUO.email}" required="true"/>  
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Telephone" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="telephone" value="#{gestionUniteOrgController.selectedUO.telephone}" required="true"/>  
+                        </a:column>
+                    </a:column>
+                   
+                    <a:column span="6">
+                        <a:label value="Capital Social" span="3" />
+                        <a:column span="9" >
+                            <p:inputNumber id="capitalSocial" value="#{gestionUniteOrgController.selectedUO.capitalSocial}" symbol="DA" symbolPosition="s" decimalSeparator="." thousandSeparator="," required="true"/> 
+                        </a:column>
+                    </a:column>
+
+                </a:row>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Sauvegarder" icon="fa fa-check" actionListener="#{gestionUniteOrgController.saveUnite}"
+                                     update="manage-unite-content" process="manage-unite-content @this" />
+                    <p:commandButton value="Annuler" icon="fa fa-times" onclick="PF('manageUniteDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteUniteDialog" showEffect="fade" width="300"
+                             message="Supprimer l'unité ?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="fa fa-check" actionListener="#{gestionUniteOrgController.deleteUnite}"
+                                 process="@this" update=":form:delete-unites-button"
+                                 oncomplete="PF('deleteUniteDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="fa fa-times"
+                                 onclick="PF('deleteUniteDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
