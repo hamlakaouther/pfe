@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+
+    <ui:define name="Title" >
+        Gestion des Cheques
+    </ui:define >
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Chèques" />
+            <a:menuitem href="test.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nouveau" icon="fa fa-plus" actionListener="#{listChequeController.addCheque}"
+                                     update=":dialogs:manage-cheque-content" oncomplete="PF('manageChequeDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:manage-cheque-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-cheques-button" value="#{listChequeController.deleteButtonMessage}"
+                                     icon="fa fa-trash" actionListener="#{listChequeController.deleteSelectedCheques}"
+                                     styleClass="ui-button-danger" disabled="#{!listChequeController.hasSelectedCheques()}" update="@this">
+                        <p:confirm header="Confirmation" message="Supprimer les chèques sélectionnés ?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="fa fa-download" />
+                    <p:commandButton value="Exporter" icon="fa fa-upload" styleClass="ui-button-help" ajax="false">
+                        <p:dataExporter type="pdf" target="dt-cheques" fileName="cheques" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:dataTable id="dt-cheques" widgetVar="dtCheques" var="cheque" value="#{listChequeController.listCheques}"
+                         reflow="true" styleClass="products-table" selection="#{listChequeController.selectedCheques}"
+                         rowKey="#{cheque.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">CHÈQUES</span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter" onkeyup="PF('dtCheques').filter()" placeholder="Search"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:ajax event="rowSelect" update=":form:delete-cheques-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-cheques-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-cheques-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-cheques-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-cheques-button" />
+                <p:column selectionMode="multiple" exportable="false" width="3%"></p:column>
+
+                <!-- Les Colums -->
+                <p:column headerText="Nom Chèque" sortBy="#{cheque.nomCheque}" filterBy="#{cheque.nomCheque}" width="14%">
+                    <h:outputText value="#{cheque.nomCheque}" />
+                </p:column>
+                <p:column headerText="Num Chèque" sortBy="#{cheque.numCheque}" filterBy="#{cheque.numCheque}" width="14%">
+                    <h:outputText value="#{cheque.numCheque}" />
+                </p:column>
+                <p:column headerText="Code Client" sortBy="#{cheque.codeClient}" filterBy="#{cheque.codeClient}" width="14%">
+                    <h:outputText value="#{cheque.codeClient}" />
+                </p:column>
+                <p:column headerText="État" sortBy="#{cheque.etat}" filterBy="#{cheque.etat}" width="14%">
+                    <h:outputText value="#{cheque.etat}" />
+                </p:column>
+                <p:column headerText="Rip" sortBy="#{cheque.rip}" filterBy="#{cheque.rip}" width="14%">
+                    <h:outputText value="#{cheque.rip}" />
+                </p:column>
+                <p:column headerText="Montant" sortBy="#{cheque.montant}">
+                    <h:outputText value="#{cheque.montant}" style="font-weight: 700">
+                        <f:converter converterId="MonnaieConvertisseur" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date de Creation" sortBy="#{cheque.dateCreation}" filterBy="#{cheque.dateCreation}" width="14%">
+                    <h:outputText value="#{cheque.dateCreation}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Banque" sortBy="#{cheque.banqueCheque.code}" filterBy="#{cheque.banqueCheque.code}" width="14%">
+                    <h:outputText value="#{cheque.banqueCheque.code}" />
+                </p:column>
+                <p:column headerText="Num Facture" sortBy="#{cheque.numFacture}" filterBy="#{cheque.numFacture}" width="14%">
+                    <h:outputText value="#{cheque.numFacture}" />
+                </p:column>
+                <p:column headerText="Montant Facture" sortBy="#{cheque.montantFacture}">
+                    <h:outputText value="#{cheque.montantFacture}" style="font-weight: 700">
+                        <f:converter converterId="MonnaieConvertisseur" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date d'Envoi DD" sortBy="#{cheque.dateEnvoiDd}" filterBy="#{cheque.dateEnvoiDd}" width="14%">
+                    <h:outputText value="#{cheque.dateEnvoiDd}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date d'Envoi Banque" sortBy="#{cheque.dateEnvoiBanque}" filterBy="#{cheque.dateEnvoiBanque}" width="14%">
+                    <h:outputText value="#{cheque.dateEnvoiBanque}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date d'Encaissement" sortBy="#{cheque.dateEncaissement}" filterBy="#{cheque.dateEncaissement}" width="14%">
+                    <h:outputText value="#{cheque.dateEncaissement}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column exportable="false" width="14%">
+                    <p:commandButton icon="fa fa-pencil-square-o" update=":dialogs:manage-cheque-content"
+                                     oncomplete="PF('manageChequeDialog').show()"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                        <p:resetInput target=":dialogs:manage-cheque-content" />
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-times"
+                                     process="@this"
+                                     oncomplete="PF('deleteChequeDialog').show()">
+                        <f:setPropertyActionListener value="#{cheque}" target="#{listChequeController.selectedCheque}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="dialogs">
+            <p:dialog id="manage-cheque-content" header="Détails du Chèque" showEffect="fade" modal="true" widgetVar="manageChequeDialog"
+                      responsive="true" width="70%">
+                <a:row>
+                    <a:column span="6">
+                        <a:label value="Nom Chèque" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="nomCheque" value="#{listChequeController.selectedCheque.nomCheque}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Num Chèque" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="numCheque" value="#{listChequeController.selectedCheque.numCheque}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Code Client" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="codeClient" value="#{listChequeController.selectedCheque.codeClient}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="État" span="3" />
+                        <a:column span="9" >
+                            <p:selectOneMenu id="etat" value="#{listChequeController.selectedCheque.etat}" >
+                                <f:selectItem itemLabel="État" itemValue=""/>
+                                <f:selectItem itemLabel="En Attante" itemValue="En Attante"/>
+                                <f:selectItem itemLabel="Impayé" itemValue="Impayé"/>
+                                <f:selectItem itemLabel="Payé" itemValue="Payé"/>
+                            </p:selectOneMenu>
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Rip" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="rip" value="#{listChequeController.selectedCheque.rip}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Montant" span="3" />
+                        <a:column span="9" >
+                            <p:inputNumber id="montant" value="#{listChequeController.selectedCheque.montant}" symbol="DA" symbolPosition="s" decimalSeparator="." thousandSeparator="," /> 
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Date de Création" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateCreation" value="#{listChequeController.selectedCheque.dateCreation}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Banque" span="3" />
+                        <a:column span="9">
+<!--                            <p:inputText id="banqueCode" value="#{listChequeController.selectedCheque.banqueCheque.code}" />-->
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Num Facture" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="numFacture" value="#{listChequeController.selectedCheque.numFacture}" />
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Montant Facture" span="3" />
+                        <a:column span="9" >
+                            <p:inputNumber id="montantFacture" value="#{listChequeController.selectedCheque.montantFacture}" symbol="DA" symbolPosition="s" decimalSeparator="." thousandSeparator="," /> 
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Date d'Envoi DD" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateEnvoiDd" value="#{listChequeController.selectedCheque.dateEnvoiDd}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Date d'Envoi Banque" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateEnvoiBanque" value="#{listChequeController.selectedCheque.dateEnvoiBanque}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+                    
+                    <a:column span="6">
+                        <a:label value="Date d'Encaissement" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateEncaissement" value="#{listChequeController.selectedCheque.dateEncaissement}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+
+
+                </a:row>
+                        <!--<p:outputPanel rendered="#{not empty listChequeController.selectedCheque}">
+                        </p:outputPanel>-->
+
+                <f:facet name="footer">
+                    <p:commandButton value="Sauvegarder" icon="fa fa-check" action="#{listChequeController.saveCheque()}"
+                                    />
+                    <p:commandButton value="Annuler" icon="fa fa-times" onclick="PF('manageChequeDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteChequeDialog" showEffect="fade" width="300"
+                             message="Supprimer le chèque ?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="fa fa-check" actionListener="#{listChequeController.deleteCheque}"
+                                 process="@this" update=":form:delete-cheques-button"
+                                 oncomplete="PF('deleteChequeDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="fa fa-times"
+                                 onclick="PF('deleteChequeDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
