@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui">
+
+    <ui:define name="Title">
+        Gestion des Caisses
+    </ui:define>
+
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Caisses" />
+            <a:menuitem href="ListCaisse.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+
+    <ui:define name="MyContent">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nouveau" icon="fa fa-plus" actionListener="#{listCaisseController.addCaisse}"
+                                     update=":dialogs:manage-caisse-content" oncomplete="PF('manageCaisseDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:manage-caisse-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-caisses-button" value="#{listCaisseController.deleteButtonMessage}"
+                                     icon="fa fa-trash" actionListener="#{listCaisseController.deleteSelectedCaisses}"
+                                     styleClass="ui-button-danger" disabled="#{!listCaisseController.hasSelectedCaisses()}" update="@this">
+                        <p:confirm header="Confirmation" message="Supprimer les caisses sélectionnées ?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="fa fa-download" />
+                    <p:commandButton value="Exporter" icon="fa fa-upload" styleClass="ui-button-help" ajax="false">
+                        <p:dataExporter type="pdf" target="dt-caisses" fileName="caisses" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:dataTable id="dt-caisses" widgetVar="dtCaisses" var="caisse" value="#{listCaisseController.listCaisses}"
+                         reflow="true" styleClass="products-table" selection="#{listCaisseController.selectedCaisses}"
+                         rowKey="#{caisse.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">CAISSES</span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter" onkeyup="PF('dtCaisses').filter()" placeholder="Search"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:ajax event="rowSelect" update=":form:delete-caisses-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-caisses-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-caisses-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-caisses-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-caisses-button" />
+                <p:column selectionMode="multiple" exportable="false" width="3%"></p:column>
+
+                <!-- Les Colonnes -->
+                <p:column headerText="ID" sortBy="#{caisse.id}" filterBy="#{caisse.id}" width="14%">
+                    <h:outputText value="#{caisse.id}" />
+                </p:column>
+                <p:column headerText="Code" sortBy="#{caisse.code}" filterBy="#{caisse.code}" width="14%">
+                    <h:outputText value="#{caisse.code}" />
+                </p:column>
+                <p:column headerText="État" sortBy="#{caisse.etat}" filterBy="#{caisse.etat}" width="14%">
+                    <h:outputText value="#{caisse.etat}" />
+                </p:column>
+                <p:column headerText="Date d'Ouverture" sortBy="#{caisse.dateOuverture}" filterBy="#{caisse.dateOuverture}" width="14%">
+                    <h:outputText value="#{caisse.dateOuverture}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Date d'Arrêt" sortBy="#{caisse.dateArret}" filterBy="#{caisse.dateArret}" width="14%">
+                    <h:outputText value="#{caisse.dateArret}">
+                        <f:converter converterId="localDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column exportable="false" width="14%">
+                    <p:commandButton icon="fa fa-pencil-square-o" update=":dialogs:manage-caisse-content"
+                                     oncomplete="PF('manageCaisseDialog').show()"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{caisse}" target="#{listCaisseController.selectedCaisse}" />
+                        <p:resetInput target=":dialogs:manage-caisse-content" />
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-times"
+                                     process="@this"
+                                     oncomplete="PF('deleteCaisseDialog').show()">
+                        <f:setPropertyActionListener value="#{caisse}" target="#{listCaisseController.selectedCaisse}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="dialogs">
+            <p:dialog id="manage-caisse-content" header="Détails de la Caisse" showEffect="fade" modal="true" widgetVar="manageCaisseDialog"
+                      responsive="true" width="70%">
+                <a:row>
+                    <a:column span="6">
+                        <a:label value="Code" span="3" />
+                        <a:column span="9" >
+                            <p:inputText id="code" value="#{listCaisseController.selectedCaisse.code}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="État" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="etat" value="#{listCaisseController.selectedCaisse.etat}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Date d'Ouverture" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateOuverture" value="#{listCaisseController.selectedCaisse.dateOuverture}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="Date d'Arrêt" span="3" />
+                        <a:column span="9">
+                            <p:calendar id="dateArret" value="#{listCaisseController.selectedCaisse.dateArret}" pattern="dd MMMM yyyy HH:mm"
+                                        converter="localDateTimeConverter" timeOnly="false" />
+                        </a:column>
+                    </a:column>
+                </a:row>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Sauvegarder" icon="fa fa-check" action="#{listCaisseController.saveCaisse}" />
+                    <p:commandButton value="Annuler" icon="fa fa-times" onclick="PF('manageCaisseDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteCaisseDialog" showEffect="fade" width="300"
+                             message="Supprimer la caisse ?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="fa fa-check" actionListener="#{listCaisseController.deleteCaisse}"
+                                 process="@this" update=":form:delete-caisses-button"
+                                 oncomplete="PF('deleteCaisseDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="fa fa-times"
+                                 onclick="PF('deleteCaisseDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
