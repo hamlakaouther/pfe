@@ -67,7 +67,6 @@ public class AdminUniteOrganisationnelle extends Audit implements Serializable {
     private Integer id;
     
     /* Capital Social */
-    @NotNull
     @Size(max = 30)
     @Column(name = "capital_social")
     private String capitalSocial;

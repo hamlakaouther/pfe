@@ -52,7 +52,7 @@ public class BanqueFacade extends AbstractFacade<Banque> {
         return list.isEmpty() ? null : list.get(0);
     }
      
-    private boolean isBanqueExists(int id) {
+    public boolean isBanqueExists(int id) {
         return findBanqueById(id) != null;
     }
 
@@ -72,6 +72,10 @@ public class BanqueFacade extends AbstractFacade<Banque> {
     public void remove(Banque banque) {
         super.remove(banque);
     }
-    
+     public List<Banque> findAllBanque() {
+        Query query = em.createNamedQuery("Banque.findAll");
+        /*Query query = em.createNamedQuery("AbstractFacade.findAll");*/
+        return query.getResultList();
+    }
     
 }

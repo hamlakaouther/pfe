@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="jakarta.faces.facelets"
+                template="/templates/templateAdmin.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:a="http://elit.dz/ui" >
+                    
+    <ui:define name="Title">
+        Gestion des Banques
+    </ui:define>
+ 
+    <ui:define name="breadCrumb">
+        <a:breadcrumb>
+            <a:menuitem value="Gestion des Banques" />
+            <a:menuitem href="ListBanque.xhtml" last="true" />
+        </a:breadcrumb>
+    </ui:define>
+   
+    <ui:define name="MyContent">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Nouveau" icon="fa fa-plus" actionListener="#{ListBanqueController.addBanque}"
+                                     update=":dialogs:manage-Banque-content" oncomplete="PF('manageBanqueDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:manage-Banque-content" />
+                    </p:commandButton>
+                    <p:commandButton id="delete-Banque-button" value="#{ListBanqueController.deleteButtonMessage}"
+                                     icon="fa fa-trash" actionListener="#{ListBanqueController.deleteSelectedBanque}"
+                                     styleClass="ui-button-danger" disabled="#{!ListBanqueController.hasSelectedBanque()}" update="@this">
+                        <p:confirm header="Confirmation" message="Supprimer les Banques sélectionnés ?"
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:fileUpload mode="simple" skinSimple="true" label="Importer" chooseIcon="fa fa-download" />
+                    <p:commandButton value="Exporter" icon="fa fa-upload" styleClass="ui-button-help" ajax="false">
+                        <p:dataExporter type="pdf" target="dt-Banque" fileName="Banque" />
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+    
+            <p:dataTable id="dt-Banque" widgetVar="dtBanque" var="Banque" value="#{ListBanqueController.ListBanque}"
+                         reflow="true" styleClass="products-table" selection="#{ListBanqueController.selectedBanques}"
+                         rowKey="#{Banque.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="products-table-header">
+                        <span style="font-weight: bold">BANQUE</span>
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter" onkeyup="PF('dtBanque').filter()" placeholder="Search"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:ajax event="rowSelect" update=":form:delete-Banque-button" />
+                <p:ajax event="rowUnselect" update=":form:delete-Banque-button" />
+                <p:ajax event="rowSelectCheckbox" update=":form:delete-Banque-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":form:delete-Banque-button" />
+                <p:ajax event="toggleSelect" update=":form:delete-Banque-button" />
+                <p:column selectionMode="multiple" exportable="false" width="3%"></p:column>
+
+                <!-- Les Colonnes -->
+                <p:column headerText="Nom Banque" sortBy="#{Banque.nom}" filterBy="#{Banque.nom}" width="14%">
+                    <h:outputText value="#{Banque.nom}" />
+                </p:column>
+                <p:column headerText="code" sortBy="#{Banque.code}" filterBy="#{Banque.code}" width="14%">
+                    <h:outputText value="#{Banque.code}" />
+                </p:column>
+                <p:column headerText="numero de compte" sortBy="#{Banque.num_compte}" filterBy="#{Banque.num_compte}" width="14%">
+                    <h:outputText value="#{Banque.num_compte}" />
+                </p:column>
+                
+                <p:column exportable="false" width="14%">
+                    <p:commandButton icon="fa fa-pencil-square-o" update=":dialogs:manage-Banque-content"
+                                     oncomplete="PF('manageBanqueDialog').show()" process="@this">
+                        <f:setPropertyActionListener value="#{Banque}" target="#{ListBanqueController.selectedBanque}" />
+                        <p:resetInput target=":dialogs:manage-Banque-content" />
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-times" process="@this" oncomplete="PF('deleteBanqueDialog').show()">
+                        <f:setPropertyActionListener value="#{Banque}" target="#{ListBanqueController.selectedBanque}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <h:form id="dialogs">
+            <p:dialog id="manage-Banque-content" header="Détails de la Banque" showEffect="fade" modal="true" widgetVar="manageBanqueDialog"
+                      responsive="true" width="70%">
+                <a:row>
+                    <a:column span="6">
+                        <a:label value="Nom Banque" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="nom" value="#{ListBanqueController.selectedBanque.nom}" />  
+                        </a:column>
+                    </a:column>
+
+                    <a:column span="6">
+                        <a:label value="code" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="code" value="#{ListBanqueController.selectedBanque.code}" />  
+                        </a:column>
+                    </a:column>
+    
+                    <a:column span="6">
+                        <a:label value="numero de compte" span="3" />
+                        <a:column span="9">
+                            <p:inputText id="num_compte" value="#{ListBanqueController.selectedBanque.num_compte}" />  
+                        </a:column>
+                    </a:column>
+                </a:row>
+                <f:facet name="footer">
+                    <p:commandButton value="Sauvegarder" icon="fa fa-check" action="#{ListBanqueController.saveBanque()}" />
+                    <p:commandButton value="Annuler" icon="fa fa-times" onclick="PF('manageBanqueDialog').hide()"
+                                     class="ui-button-secondary" type="button" />
+                </f:facet>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteBanqueDialog" showEffect="fade" width="300"
+                             message="Supprimer la Banque ?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="fa fa-check" actionListener="#{ListBanqueController.deleteBanque}"
+                                 process="@this" update=":form:delete-Banque-button"
+                                 oncomplete="PF('deleteBanqueDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="fa fa-times"
+                                 onclick="PF('deleteBanqueDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

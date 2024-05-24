@@ -60,6 +60,11 @@ public class CaisseFacade extends AbstractFacade<Caisse> {
     public void editCaisse(Caisse caisse) {
         super.edit(caisse);
     }
+     public List<Caisse> findAllCaisse() {
+        Query query = em.createNamedQuery("Caisse.findAll");
+        /*Query query = em.createNamedQuery("AbstractFacade.findAll");*/
+        return query.getResultList();
+    }
 
     @Override
     public void remove(Caisse caisse) {
